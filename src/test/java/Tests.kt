@@ -1,34 +1,32 @@
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import vasiliev.aleksey.ciphxor.Logic
 import java.io.File
+import kotlin.test.assertNotEquals
 
 
-/**class Tests {
+class Tests {
     @Test
     fun ifInputArgumentsAreCorrect() {
-        assertTrue(Logic.checkIfArgumentsAreCorrect(arrayOf("-c", "fffc", "input.txt")), "Illegal args: " + arrayOf("-c", "fffc", "input.txt").joinToString(" "))
-        assertTrue(Logic.checkIfArgumentsAreCorrect(arrayOf("-d", "102bbff900dc", "input.txt", "-o", "output.txt")), "Illegal args: " + arrayOf("-d", "102bbff900dc", "input.txt", "-o", "output.txt").joinToString(" "))
-
-        assertFalse(Logic.checkIfArgumentsAreCorrect(arrayOf("-h", "mnd0kfdo", "input.txt")), "Illegal args: " + arrayOf("-h", "mnd0kfdo", "input.txt").joinToString(" "))
-        assertFalse(Logic.checkIfArgumentsAreCorrect(arrayOf("-d", "10f92bac", "input.txt", "-l", "output.txt", "-r")), "Illegal args: " + arrayOf("-d", "10f92bac", "input.txt", "-l", "output.txt", "-r").joinToString(" "))
-        assertFalse(Logic.checkIfArgumentsAreCorrect(arrayOf("-d", "10f92bac", "input.txt", "output.txt")), "Illegal args: " + arrayOf("-d", "10f92bac", "input.txt", "output.txt").joinToString(" "))
+        assertEquals(Logic.argsParser(arrayOf("-c", "fffc", "input.txt")), listOf("fffc", "input.txt"))
+        assertEquals(Logic.argsParser(arrayOf("-d", "1a0b2d", "input.txt", "-o", "output.txt")), listOf("1a0b2d", "input.txt", "output.txt"))
+        assertNotEquals(Logic.argsParser(arrayOf("-c", "11bc", "input.txt", "-o", "output.txt")), listOf("1001", "input.txt", "output.txt"))
+        assertThrows<org.apache.commons.cli.UnrecognizedOptionException> { Logic.argsParser(arrayOf("-ed", "11bccc", "input.txt", "-o", "output.txt")) }
     }
 
     @Test
     fun cipherChecking() {
         val howAreYouBefore = File("testFiles/HowAreYou.txt").readLines().joinToString("")
-        Logic.cipher("10d", "testFiles/HowAreYou.txt", "nothing")
-        Logic.cipher("10d", "testFiles/HowAreYou.txt", "nothing")
+        Logic.cipher(listOf("10d", "testFiles/HowAreYou.txt", "testFiles/HowAreYou.txt"))
+        Logic.cipher(listOf("10d", "testFiles/HowAreYou.txt", "testFiles/HowAreYou.txt"))
         val howAreYouAfter = File("testFiles/HowAreYou.txt").readLines().joinToString("")
         assertEquals(howAreYouBefore, howAreYouAfter)
 
         val alphabetBefore = File("testFiles/Alphabet.txt").readLines().joinToString("")
-        Logic.cipher("fabacbcbdbbdbdbdab101020", "testFiles/Alphabet.txt", "nothing")
-        Logic.cipher("fabacbcbdbbdbdbdab101020", "testFiles/Alphabet.txt", "nothing")
+        Logic.cipher(listOf("fabacbcbdbbdbdbdab101020", "testFiles/Alphabet.txt", "testFiles/Alphabet.txt"))
+        Logic.cipher(listOf("fabacbcbdbbdbdbdab101020", "testFiles/Alphabet.txt", "testFiles/Alphabet.txt"))
         val alphabetAfter = File("testFiles/Alphabet.txt").readLines().joinToString("")
         assertEquals(alphabetBefore, alphabetAfter)
     }
-}**/
+}
