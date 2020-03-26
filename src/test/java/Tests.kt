@@ -6,7 +6,7 @@ import vasiliev.aleksey.ciphxor.Logic
 import java.io.File
 
 
-class Tests {
+/**class Tests {
     @Test
     fun ifInputArgumentsAreCorrect() {
         assertTrue(Logic.checkIfArgumentsAreCorrect(arrayOf("-c", "fffc", "input.txt")), "Illegal args: " + arrayOf("-c", "fffc", "input.txt").joinToString(" "))
@@ -31,4 +31,4 @@ class Tests {
         val alphabetAfter = File("testFiles/Alphabet.txt").readLines().joinToString("")
         assertEquals(alphabetBefore, alphabetAfter)
     }
-}
+}**/

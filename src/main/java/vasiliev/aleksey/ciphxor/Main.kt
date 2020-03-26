@@ -25,19 +25,6 @@ package vasiliev.aleksey.ciphxor
  */
 
 fun main (args: Array<String>) {
-    if (!Logic.checkIfArgumentsAreCorrect(args)) {
-        // user-friendly interface
-        println("Incorrect arguments.")
-        return
-    }
-    var outputPath = "nothing"
-    if (args.size == 5) {
-        outputPath = args[4]
-    }
-    Logic.cipher(args[1], args[2], outputPath)
-    if (args[0] == "-c") {
-        println("Encrypted successfully!")
-    } else {
-        println("Decrypted successfully!")
-    }
+    val arguments = Logic.argsParser(args)
+    Logic.cipher(arguments)
 }
