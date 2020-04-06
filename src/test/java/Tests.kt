@@ -17,16 +17,16 @@ class Tests {
 
     @Test
     fun cipherChecking() {
-        val howAreYouBefore = File("testFiles/HowAreYou.txt").readLines().joinToString("")
-        Logic.cipher(listOf("10d", "testFiles/HowAreYou.txt", "testFiles/HowAreYou.txt"))
-        Logic.cipher(listOf("10d", "testFiles/HowAreYou.txt", "testFiles/HowAreYou.txt"))
-        val howAreYouAfter = File("testFiles/HowAreYou.txt").readLines().joinToString("")
+        val howAreYouBefore = File("src/test/resources/HowAreYou.txt").readLines().joinToString("")
+        Logic.cipher(listOf("10d", "src/test/resources/HowAreYou.txt", "src/test/resources/HowAreYou.txt"))
+        Logic.cipher(listOf("10d", "src/test/resources/HowAreYou.txt", "src/test/resources/HowAreYou.txt"))
+        val howAreYouAfter = File("src/test/resources/HowAreYou.txt").readLines().joinToString("")
         assertEquals(howAreYouBefore, howAreYouAfter)
 
-        val alphabetBefore = File("testFiles/Alphabet.txt").readLines().joinToString("")
-        Logic.cipher(listOf("fabacbcbdbbdbdbdab101020", "testFiles/Alphabet.txt", "testFiles/Alphabet.txt"))
-        Logic.cipher(listOf("fabacbcbdbbdbdbdab101020", "testFiles/Alphabet.txt", "testFiles/Alphabet.txt"))
-        val alphabetAfter = File("testFiles/Alphabet.txt").readLines().joinToString("")
+        val alphabetBefore = File("src/test/resources/Alphabet.txt").readLines().joinToString("")
+        Logic.cipher(listOf("fabacbcbdbbdbdbdab101020", "src/test/resources/Alphabet.txt", "src/test/resources/Alphabet.txt"))
+        Logic.cipher(listOf("fabacbcbdbbdbdbdab101020", "src/test/resources/Alphabet.txt", "src/test/resources/Alphabet.txt"))
+        val alphabetAfter = File("src/test/resources/Alphabet.txt").readLines().joinToString("")
         assertEquals(alphabetBefore, alphabetAfter)
     }
 }

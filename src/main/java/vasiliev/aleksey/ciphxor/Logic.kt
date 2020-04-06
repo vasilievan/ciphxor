@@ -2,16 +2,33 @@ package vasiliev.aleksey.ciphxor
 
 import org.apache.commons.cli.*
 import java.io.FileInputStream
+import java.io.FileNotFoundException
 import java.io.FileOutputStream
-import java.io.IOException
 import java.lang.StringBuilder
 import kotlin.experimental.xor
 import kotlin.streams.toList
 
 object Logic {
+    private val summaryOptions = Options()
     fun argsParser(args: Array<String>): List<String> {
-        val summaryOptions = Options()
+        setUp()
+        val defaultParser = DefaultParser()
+        val parsedCmdLine = defaultParser.parse(summaryOptions, args)
+        val parsedArguments = mutableListOf<String>()
+        if (parsedCmdLine.hasOption("c")) {
+            parsedArguments.add(parsedCmdLine.getOptionValues("c")[0])
+            parsedArguments.add(parsedCmdLine.getOptionValues("c")[1])
+        } else if (parsedCmdLine.hasOption("d")) {
+            parsedArguments.add(parsedCmdLine.getOptionValues("d")[0])
+            parsedArguments.add(parsedCmdLine.getOptionValues("d")[1])
+        }
+        if (parsedCmdLine.hasOption("o")) {
+            parsedArguments.add(parsedCmdLine.getOptionValues("o")[0])
+        }
+        return parsedArguments
+    }
 
+    private fun setUp() {
         val cipherOption = Option("c", "cipher", true, "It's used to cipher the file. Put key as an argument and input file name.")
         cipherOption.args = 2
         cipherOption.setOptionalArg(false)
@@ -30,21 +47,6 @@ object Logic {
 
         summaryOptions.addOptionGroup(cdOptions)
         summaryOptions.addOption(outputOption)
-
-        val defaultParser = DefaultParser()
-        val parsedCmdLine = defaultParser.parse(summaryOptions, args)
-        val parsedArguments = mutableListOf<String>()
-        if (parsedCmdLine.hasOption("c")) {
-            parsedArguments.add(parsedCmdLine.getOptionValues("c")[0])
-            parsedArguments.add(parsedCmdLine.getOptionValues("c")[1])
-        } else if (parsedCmdLine.hasOption("d")) {
-            parsedArguments.add(parsedCmdLine.getOptionValues("d")[0])
-            parsedArguments.add(parsedCmdLine.getOptionValues("d")[1])
-        }
-        if (parsedCmdLine.hasOption("o")) {
-            parsedArguments.add(parsedCmdLine.getOptionValues("o")[0])
-        }
-        return parsedArguments
     }
 
     fun cipher(list: List<String>) {
@@ -52,26 +54,29 @@ object Logic {
             println("Incorrect arguments.")
             return
         }
+        var currentPosition = 0L
         try {
-            var currentPosition = 0L
-            val inputFile = FileInputStream(list[1])
-            val inputFileBytes = inputFile.readBytes()
-            inputFile.close()
-            val outputFile = if (list.size > 2) FileOutputStream(list[2]) else FileOutputStream("modified_" + list[1])
-            val binaryKey = list[0].hexStringToBinary()
-            for (byte in inputFileBytes) {
-                val sb = StringBuilder()
-                sb.append(binaryKey.chars().skip(currentPosition).limit(8L).toList().map { it.toChar() }.joinToString (""))
-                currentPosition += 8L
-                currentPosition %= binaryKey.length
-                if (sb.length < 8) {
-                    sb.append(binaryKey.chars().limit(currentPosition).toList().map { it.toChar() }.joinToString (""))
+            FileInputStream(list[1]).use { input ->
+                val inputFileBytes = input.readBytes()
+                input.close()
+                val outputFile = if (list.size > 2) FileOutputStream(list[2]) else FileOutputStream("modified_" + list[1])
+                outputFile.use { out ->
+                    val binaryKey = list[0].hexStringToBinary()
+                    for (byte in inputFileBytes) {
+                        val sb = StringBuilder()
+                        sb.append(binaryKey.chars().skip(currentPosition).limit(8L).toList().map { it.toChar() }.joinToString(""))
+                        currentPosition += 8L
+                        currentPosition %= binaryKey.length
+                        if (sb.length < 8) {
+                            sb.append(binaryKey.chars().limit(currentPosition).toList().map { it.toChar() }.joinToString(""))
+                        }
+                        out.write((byte xor sb.toString().toInt(2).toByte()).toInt())
+                    }
+                    out.close()
                 }
-                outputFile.write((byte xor sb.toString().toInt(2).toByte()).toInt())
             }
-            outputFile.close()
-        } catch (e: IOException) {
-            println("File not found.")
+        } catch (ex: FileNotFoundException) {
+            println("File not found. Check if path is correct.")
         }
     }
 
