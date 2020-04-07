@@ -16,14 +16,12 @@ object Logic {
         val parsedCmdLine = defaultParser.parse(summaryOptions, args)
         val parsedArguments = mutableListOf<String>()
         if (parsedCmdLine.hasOption("c")) {
-            parsedArguments.add(parsedCmdLine.getOptionValues("c")[0])
-            parsedArguments.add(parsedCmdLine.getOptionValues("c")[1])
+            parsedArguments += parsedCmdLine.getOptionValues("c")
         } else if (parsedCmdLine.hasOption("d")) {
-            parsedArguments.add(parsedCmdLine.getOptionValues("d")[0])
-            parsedArguments.add(parsedCmdLine.getOptionValues("d")[1])
+            parsedArguments += parsedCmdLine.getOptionValues("d")
         }
         if (parsedCmdLine.hasOption("o")) {
-            parsedArguments.add(parsedCmdLine.getOptionValues("o")[0])
+            parsedArguments.add(parsedCmdLine.getOptionValue("o"))
         }
         return parsedArguments
     }
